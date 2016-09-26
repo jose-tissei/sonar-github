@@ -96,7 +96,9 @@ public class GlobalReport {
   }
 
   public GHCommitState getStatus() {
-    return (newIssues(Severity.BLOCKER) > 0 || newIssues(Severity.CRITICAL) > 0) ? GHCommitState.ERROR : GHCommitState.SUCCESS;
+    int newIssues = newIssues(Severity.BLOCKER) + newIssues(Severity.CRITICAL) + newIssues(Severity.MAJOR) + newIssues(
+            Severity.MINOR) + newIssues(Severity.INFO);
+    return newIssues > 0 ? GHCommitState.ERROR : GHCommitState.SUCCESS;
   }
 
   private int newIssues(String s) {

@@ -196,7 +196,7 @@ public class PullRequestIssuePostJobTest {
   }
 
   @Test
-  public void testPullRequestAnalysisWithNewIssuesNoBlockerNorCritical() {
+  public void testPullRequestAnalysisWithNewMajorIssues() {
     DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
     Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MAJOR, true, "msg1");
     when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
@@ -207,7 +207,37 @@ public class PullRequestIssuePostJobTest {
 
     pullRequestIssuePostJob.executeOn(null, null);
 
-    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.SUCCESS, "SonarQube reported 1 issue, no critical nor blocker");
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no critical nor blocker");
+  }
+
+  @Test
+  public void testPullRequestAnalysisWithNewMinorIsues() {
+    DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
+    Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MINOR, true, "msg1");
+    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+
+    when(issues.issues()).thenReturn(Arrays.<Issue>asList(newIssue));
+    when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
+    when(pullRequestFacade.hasFileLine(inputFile1, 1)).thenReturn(true);
+
+    pullRequestIssuePostJob.executeOn(null, null);
+
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no critical nor blocker");
+  }
+
+  @Test
+  public void testPullRequestAnalysisWithNewInfoIssues() {
+    DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
+    Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.INFO, true, "msg1");
+    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+
+    when(issues.issues()).thenReturn(Arrays.<Issue>asList(newIssue));
+    when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
+    when(pullRequestFacade.hasFileLine(inputFile1, 1)).thenReturn(true);
+
+    pullRequestIssuePostJob.executeOn(null, null);
+
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no critical nor blocker");
   }
 
   @Test
