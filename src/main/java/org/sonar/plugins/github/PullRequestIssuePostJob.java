@@ -70,7 +70,7 @@ public class PullRequestIssuePostJob implements org.sonar.api.batch.PostJob, Che
 
     pullRequestFacade.createOrUpdateGlobalComments(report.hasNewIssue() ? report.formatForMarkdown() : null);
 
-    pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(), report.getStatusDescription());
+    pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(gitHubPluginConfiguration.pullRequestFailSeverity()), report.getStatusDescription());
   }
 
   @Override

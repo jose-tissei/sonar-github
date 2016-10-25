@@ -95,8 +95,13 @@ public class GlobalReport {
     return sb.toString();
   }
 
-  public GHCommitState getStatus() {
-    return (newIssues(Severity.BLOCKER) > 0 || newIssues(Severity.CRITICAL) > 0) ? GHCommitState.ERROR : GHCommitState.SUCCESS;
+  public GHCommitState getStatus(String severityList) {
+    String[] severityArray = severityList.split(",");
+    int newIssues = 0;
+    for (int i = 0; i < severityArray.length; i++) {
+      newIssues = newIssues + newIssues(severityArray[i]);
+    }
+    return (newIssues > 0) ? GHCommitState.ERROR : GHCommitState.SUCCESS;
   }
 
   private int newIssues(String s) {
