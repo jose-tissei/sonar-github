@@ -68,6 +68,7 @@ public class PullRequestIssuePostJobTest {
     context = mock(PostJobContext.class);
 
     settings.setProperty("sonar.host.url", "http://192.168.0.1");
+    settings.setProperty("sonar.github.pullRequestFailSeverity", "BLOCKER,CRITICAL,MAJOR,MINOR");
     settings.setProperty(CoreProperties.SERVER_BASE_URL, "http://myserver");
     pullRequestIssuePostJob = new PullRequestIssuePostJob(config, pullRequestFacade, new MarkDownUtils(settings));
   }
@@ -200,6 +201,27 @@ public class PullRequestIssuePostJobTest {
     DefaultInputFile inputFile1 = new DefaultInputFile("foo", "src/Foo.php");
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MAJOR, true, "msg1");
     when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn(new URL("http://github/blob/abc123/src/Foo.php#L1"));
+  }
+
+  public void testPullRequestAnalysisWithMinorIssue() {
+    DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
+    Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MINOR, true, "msg1");
+    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+
+    when(issues.issues()).thenReturn(Arrays.<Issue>asList(newIssue));
+    when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
+    when(pullRequestFacade.hasFileLine(inputFile1, 1)).thenReturn(true);
+
+    pullRequestIssuePostJob.executeOn(null, null);
+
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no critical nor blocker");
+  }
+
+  @Test
+  public void testPullRequestAnalysisWithMajorIssue() {
+    DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
+    Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MAJOR, true, "msg1");
+    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
 
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList(newIssue));
     when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
@@ -207,7 +229,22 @@ public class PullRequestIssuePostJobTest {
 
     pullRequestIssuePostJob.execute(context);
 
-    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.SUCCESS, "SonarQube reported 1 issue, no criticals or blockers");
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no critical nor blocker");
+  }
+
+  @Test
+  public void testPullRequestAnalysisWithInfoIssue() {
+    DefaultInputFile inputFile1 = new DefaultInputFile("src/Foo.php");
+    Issue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.INFO, true, "msg1");
+    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+
+    when(issues.issues()).thenReturn(Arrays.<Issue>asList(newIssue));
+    when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
+    when(pullRequestFacade.hasFileLine(inputFile1, 1)).thenReturn(true);
+
+    pullRequestIssuePostJob.executeOn(null, null);
+
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.SUCCESS, "SonarQube reported 1 issue, no critical nor blocker");
   }
 
   @Test

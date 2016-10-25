@@ -59,7 +59,14 @@ import org.sonar.api.PropertyType;
     description = "Issues will not be reported as inline comments but only in the global summary comment",
     project = true,
     global = true,
-    type = PropertyType.BOOLEAN)
+    type = PropertyType.BOOLEAN),
+  @Property(
+    key = GitHubPlugin.GITHUB_PULL_REQUEST_FAIL_SEVERITY,
+    defaultValue = "BLOCKER,CRITICAL",
+    name = "Severity to fail pull request",
+    description = "Pull request will be updated with failed status based on the issues severity",
+    project = true,
+    global = true)
 })
 public class GitHubPlugin implements Plugin {
 
@@ -68,6 +75,7 @@ public class GitHubPlugin implements Plugin {
   public static final String GITHUB_REPO = "sonar.github.repository";
   public static final String GITHUB_PULL_REQUEST = "sonar.github.pullRequest";
   public static final String GITHUB_DISABLE_INLINE_COMMENTS = "sonar.github.disableInlineComments";
+  public static final String GITHUB_PULL_REQUEST_FAIL_SEVERITY = "sonar.github.pullRequestFailSeverity";
 
 
   @Override
