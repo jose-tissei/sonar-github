@@ -16,7 +16,7 @@ deploy:
   provider: releases
   api_key:
     - secure: "IpZBvhfLXMlBNW0GaJe51Jx3FpWPu8Wa7wowTV8b/Vl84xG0lWXnyAuoRYUcZUWgvRJrvSNDFghfrtdIPqVtvHQYA8ZvkJLRsudGZsSiQfeI/mZBUmKtorqcfED7gSBZ5UFc1M6EGaFgN6zb/xjJYG1F3YkNTP+7C66vLwS6JrYsRNICLzd4t+YRmaHKnigV5u7vF0al/0EbBOKKnJPqcnUK4t6LpvehO780J/MYA8bawh/ITQZBa4cjgKZE/vpVrdGgP3qTb6ka4a6ClHY2HVDSKpU4cnVraSgzZKxsiJaegTSOEG9KxHktzqiaKsYQprGpIFiLEdKddhK3H/2wmg2BKcu5tpV8p05O8cFzpaiWaLk20b46/SzKBJCmvEZLvLftDPToryuT+X58Gvy2YXDJP76KU2K4zXXVcPGd4K0DR4BMLD9GQzlVvTuFqCMUaM0H/SL8n6q+r7Y/gj2roEEaLQ7OiO2/kw7TmuUW9D9EwTOLxSqoQwGyFMEteJ6uc5sHbRzoCp0w8DZYosHmsaxePgBL97mHhGeWG1c1ePgyUhGxssrZfn/AN+dUH6cJrcCdXEI5z0Zyva2+y1NhQ7WV47DRVYPA6giUb+waDl8xf81v5tvo5O4AhCVvBUo1ZCpiqHObseKpgUrXonU5tFAd4n8GSM7T/dhbkq4Q8eY="
-  file: $HOME/build/jose-tissei/sonar-github/target/sonar-github-plugin-1.4-sources.jar
+  file: $HOME/build/jose-tissei/sonar-github/target/sonar-github-plugin-1.4.jar
   skip_cleanup: true
   on:
     tags: true  
