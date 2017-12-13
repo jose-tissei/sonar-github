@@ -27,7 +27,7 @@ deploy:
   provider: releases
   api_key:
       secure: GITHUB_API_KEY_ENCRYPTED
-  file: $HOME/build/jose-tissei/sonar-github/target/sonar-github-plugin-1.2-sources.jar
+  file: $HOME/build/jose-tissei/sonar-github/target/sonar-github-plugin-1.4-sources.jar
   skip_cleanup: true
   on:
     tags: true  
